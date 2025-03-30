@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { pageToImageCoords } from "../utils/coordinateUtils";
 
 const useCanvas = ({
@@ -21,13 +21,8 @@ const useCanvas = ({
 
   const handleCanvasClick = (e) => {
     if (!image) return;
-    console.log("event===", e, canvasRef.current);
     const { x, y } = pageToImageCoords(e, canvasRef.current);
-    console.log("xy==", { x, y });
-
     const clickedOnAnnotation = checkClickOnAnnotation(x, y);
-
-    console.log("datta=====", clickedOnAnnotation);
     if (clickedOnAnnotation.clicked) {
       setSelectedAnnotation(clickedOnAnnotation.index);
       return;
@@ -190,7 +185,7 @@ const useCanvas = ({
           : "rgba(0, 255, 0, 0.2)";
         ctx.fill();
         ctx.strokeStyle = isSelected ? "red" : "green";
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 3;
         ctx.stroke();
 
         annotation.points.forEach((point) => {

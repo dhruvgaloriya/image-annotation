@@ -7,7 +7,6 @@ import "./MainLayout.css";
 const MainLayout = ({
   image,
   canvasRef,
-  imageRef,
   handleCanvasClick,
   handleMouseDown,
   handleMouseMove,

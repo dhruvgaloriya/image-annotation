@@ -7,7 +7,7 @@ const FileInput = ({ handleImageUpload }) => {
       <input
         type="file"
         id="imageUpload"
-        accept="image/*"
+        accept=".jpg, .jpeg, .png"
         onChange={handleImageUpload}
       />
       <label htmlFor="imageUpload" className="button">

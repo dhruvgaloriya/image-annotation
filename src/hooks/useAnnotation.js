@@ -1,18 +1,13 @@
-import { useEffect, useState } from "react";
-import { isPointInPolygon, distanceToLine } from "../utils/annotationUtils";
+import { useState } from "react";
+import { distanceToLine, isPointInPolygon } from "../utils/annotationUtils";
 
 const useAnnotation = () => {
   const [annotations, setAnnotations] = useState([]);
   const [currentAnnotation, setCurrentAnnotation] = useState([]);
   const [selectedAnnotation, setSelectedAnnotation] = useState(null);
 
-  useEffect(() => {
-    if (annotations.length) {
-      console.log("anonation", annotations);
-    }
-  }, [annotations]);
-
   const checkClickOnAnnotation = (x, y) => {
+    console.log("x,y", x, y);
     for (let i = 0; i < annotations.length; i++) {
       const annotation = annotations[i];
 
