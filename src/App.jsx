@@ -2,7 +2,6 @@ import React from "react";
 import MainLayout from "./components/templates/MainLayout/MainLayout";
 import useAnnotation from "./hooks/useAnnotation";
 import useCanvas from "./hooks/useCanvas";
-import useHistory from "./hooks/useHistory";
 import useImage from "./hooks/useImage";
 
 function App() {
@@ -29,13 +28,6 @@ function App() {
     handleClearAll,
     handleCancelAnnotation,
   } = useAnnotation();
-
-  // Undo/Redo functionality
-  const { history, historyIndex, handleUndo, handleRedo } = useHistory(
-    annotations,
-    setAnnotations,
-    setSelectedAnnotation
-  );
 
   // Canvas drawing and interaction
   const {
@@ -74,10 +66,6 @@ function App() {
       handleDragOver={handleDragOver}
       handleDrop={handleDrop}
       setMode={setMode}
-      handleUndo={handleUndo}
-      handleRedo={handleRedo}
-      historyIndex={historyIndex}
-      history={history}
       handleDelete={handleDelete}
       selectedAnnotation={selectedAnnotation}
       annotations={annotations}

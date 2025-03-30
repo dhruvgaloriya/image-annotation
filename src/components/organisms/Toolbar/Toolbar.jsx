@@ -1,9 +1,8 @@
 import React from "react";
-import FileInput from "../../atoms/FileInput/FileInput";
 import DragDropArea from "../../atoms/DragDropArea/DragDropArea";
-import ModeSelector from "../../molecules/ModeSelector/ModeSelector";
-import HistoryControls from "../../molecules/HistoryControls/HistoryControls";
+import FileInput from "../../atoms/FileInput/FileInput";
 import ActionButtons from "../../molecules/ActionButtons/ActionButtons";
+import ModeSelector from "../../molecules/ModeSelector/ModeSelector";
 import "./Toolbar.css";
 
 const Toolbar = ({
@@ -12,10 +11,6 @@ const Toolbar = ({
   handleDrop,
   mode,
   setMode,
-  handleUndo,
-  handleRedo,
-  historyIndex,
-  history,
   handleDelete,
   selectedAnnotation,
   annotations,
@@ -34,14 +29,6 @@ const Toolbar = ({
       </div>
 
       <ModeSelector mode={mode} setMode={setMode} />
-
-      <HistoryControls
-        handleUndo={handleUndo}
-        handleRedo={handleRedo}
-        historyIndex={historyIndex}
-        history={history}
-      />
-
       <ActionButtons
         handleDelete={handleDelete}
         selectedAnnotation={selectedAnnotation}
