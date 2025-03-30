@@ -12,10 +12,6 @@
   justify-content: center;
 }
 
-.button:hover {
-  background-color: #2980b9;
-}
-
 .button:disabled {
   background-color: #ccc;
   cursor: not-allowed;

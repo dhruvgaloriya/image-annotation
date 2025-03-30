@@ -1,7 +1,7 @@
 import React from "react";
-import Toolbar from "../../organisms/Toolbar/Toolbar";
 import CanvasArea from "../../organisms/CanvasArea/CanvasArea";
 import StatusBar from "../../organisms/StatusBar/StatusBar";
+import Toolbar from "../../organisms/Toolbar/Toolbar";
 import "./MainLayout.css";
 
 const MainLayout = ({
@@ -62,13 +62,13 @@ const MainLayout = ({
           <p>
             <strong>Polygon Mode:</strong> Click to place points. Complete the
             polygon by clicking near the starting point. Click on a point or
-            polygon to select and move it. Use Undo/Redo to fix mistakes.
+            polygon to select and move it.
           </p>
         ) : (
           <p>
             <strong>Arrow Mode:</strong> Click to set the start point, then
             click again to set the end point. Click on an arrow or its endpoints
-            to select and move it. Use Undo/Redo to fix mistakes.
+            to select and move it.
           </p>
         )}
       </div>
