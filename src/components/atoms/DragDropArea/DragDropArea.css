@@ -1,0 +1,13 @@
+.drag-area {
+  padding: 10px 15px;
+  border: 2px dashed #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
+}
+
+.drag-area:hover {
+  border-color: #3498db;
+  background-color: #f0f8ff;
+}
