@@ -10,7 +10,7 @@ const FileInput = ({ handleImageUpload }) => {
         accept="image/*"
         onChange={handleImageUpload}
       />
-      <label htmlFor="imageUpload" className="btn">
+      <label htmlFor="imageUpload" className="button">
         Upload Image
       </label>
     </>

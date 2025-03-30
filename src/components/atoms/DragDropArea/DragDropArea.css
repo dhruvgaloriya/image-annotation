@@ -1,13 +1,15 @@
-.drag-area {
-  padding: 10px 15px;
+.drag-drop-area {
   border: 2px dashed #ccc;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: #f9f9f9;
-  transition: all 0.3s ease;
+  padding: 10px 15px;
+  text-align: center;
+  color: #333;
+  transition: border-color 0.3s;
 }
 
-.drag-area:hover {
+.drag-drop-area:hover {
+  border-color: #aaa;
+}
+
+.drag-drop-area--dragging {
   border-color: #3498db;
-  background-color: #f0f8ff;
 }

@@ -10,7 +10,7 @@ const Button = ({
 }) => {
   return (
     <button
-      className={`btn ${active ? "active" : ""}`}
+      className={`button ${active ? "button--active" : ""}`}
       onClick={onClick}
       disabled={disabled}
       title={title}

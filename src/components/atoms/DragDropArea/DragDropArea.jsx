@@ -3,7 +3,7 @@ import "./DragDropArea.css";
 
 const DragDropArea = ({ onDragOver, onDrop }) => {
   return (
-    <div className="drag-area" onDragOver={onDragOver} onDrop={onDrop}>
+    <div className="drag-drop-area" onDragOver={onDragOver} onDrop={onDrop}>
       or Drag & Drop Image
     </div>
   );
