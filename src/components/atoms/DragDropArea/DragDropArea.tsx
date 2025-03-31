@@ -4,6 +4,8 @@ import "./DragDropArea.css";
 interface DragDropAreaProps {
   onDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
   onDrop: (e: React.DragEvent<HTMLDivElement>) => void;
+  error?: string | null;
+  clearError: () => void;
 }
 
 /**
@@ -11,10 +13,23 @@ interface DragDropAreaProps {
  * @param onDragOver - Handler for drag over event
  * @param onDrop - Handler for drop event
  */
-const DragDropArea: React.FC<DragDropAreaProps> = ({ onDragOver, onDrop }) => {
+const DragDropArea: React.FC<DragDropAreaProps> = ({
+  onDragOver,
+  onDrop,
+  error,
+  clearError,
+}) => {
   return (
-    <div className="drag-drop-area" onDragOver={onDragOver} onDrop={onDrop}>
-      or Drag & Drop Image
+    <div className="drag-drop-area-container">
+      <div
+        className={`drag-drop-area ${error ? "drag-drop-area--error" : ""}`}
+        onDragOver={onDragOver}
+        onDrop={onDrop}
+        onClick={clearError}
+      >
+        or Drag & Drop Image
+      </div>
+      {error && <div className="drag-drop-error">{error}</div>}
     </div>
   );
 };

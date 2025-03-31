@@ -27,6 +27,8 @@ interface MainLayoutProps {
   handleCancelAnnotation: () => void;
   exportAnnotations: () => void;
   exportAsImage: () => void;
+  error: string | null;
+  clearError: () => void;
 }
 
 /**
@@ -53,6 +55,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   handleCancelAnnotation,
   exportAnnotations,
   exportAsImage,
+  error,
+  clearError,
   handleTouchStart,
   handleTouchMove,
   handleTouchEnd,
@@ -78,6 +82,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({
         exportAnnotations={exportAnnotations}
         exportAsImage={exportAsImage}
         image={image}
+        error={error}
+        clearError={clearError}
       />
 
       <div className="instructions">
