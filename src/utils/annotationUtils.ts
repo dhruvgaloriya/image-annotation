@@ -1,5 +1,20 @@
-export const isPointInPolygon = (x, y, points) => {
-  console.log("points===", points);
+interface Point {
+  x: number;
+  y: number;
+}
+
+/**
+ * Checks if a point is inside a polygon
+ * @param x - X coordinate of point
+ * @param y - Y coordinate of point
+ * @param points - Array of polygon points
+ * @returns Boolean indicating if point is inside polygon
+ */
+export const isPointInPolygon = (
+  x: number,
+  y: number,
+  points: Point[]
+): boolean => {
   let inside = false;
   for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
     const xi = points[i].x;
@@ -14,7 +29,24 @@ export const isPointInPolygon = (x, y, points) => {
   return inside;
 };
 
-export const distanceToLine = (x, y, x1, y1, x2, y2) => {
+/**
+ * Calculates distance from a point to a line segment
+ * @param x - X coordinate of point
+ * @param y - Y coordinate of point
+ * @param x1 - X coordinate of line start
+ * @param y1 - Y coordinate of line start
+ * @param x2 - X coordinate of line end
+ * @param y2 - Y coordinate of line end
+ * @returns Distance from point to line
+ */
+export const distanceToLine = (
+  x: number,
+  y: number,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number
+): number => {
   const A = x - x1;
   const B = y - y1;
   const C = x2 - x1;

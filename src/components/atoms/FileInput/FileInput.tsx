@@ -1,7 +1,15 @@
 import React from "react";
 import "./FileInput.css";
 
-const FileInput = ({ handleImageUpload }) => {
+interface FileInputProps {
+  handleImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+/**
+ * File input component styled as a button
+ * @param handleImageUpload - Handler for file input change event
+ */
+const FileInput: React.FC<FileInputProps> = ({ handleImageUpload }) => {
   return (
     <>
       <input

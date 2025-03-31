@@ -1,19 +1,15 @@
-import React from "react";
-import MainLayout from "./components/templates/MainLayout/MainLayout";
-import useAnnotation from "./hooks/useAnnotation";
-import useCanvas from "./hooks/useCanvas";
-import useImage from "./hooks/useImage";
+import MainLayout from "@/components/templates/MainLayout/MainLayout";
+import useAnnotation from "@/hooks/useAnnotation";
+import useCanvas from "@/hooks/useCanvas";
+import useImage from "@/hooks/useImage";
 
+/**
+ * Main application component
+ */
 function App() {
   // Image handling (upload, drag/drop, dimensions)
-  const {
-    image,
-    imageRef,
-    imageSize,
-    handleImageUpload,
-    handleDragOver,
-    handleDrop,
-  } = useImage();
+  const { image, imageSize, handleImageUpload, handleDragOver, handleDrop } =
+    useImage();
 
   // Annotation state and actions
   const {
@@ -56,7 +52,6 @@ function App() {
     <MainLayout
       image={image}
       canvasRef={canvasRef}
-      imageRef={imageRef}
       handleCanvasClick={handleCanvasClick}
       handleMouseDown={handleMouseDown}
       handleMouseMove={handleMouseMove}
