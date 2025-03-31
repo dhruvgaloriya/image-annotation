@@ -18,6 +18,9 @@ const CanvasArea = ({
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
+          onTouchMove={handleMouseMove}
+          onTouchStart={handleMouseDown}
+          onTouchEnd={handleMouseUp}
           onMouseLeave={handleMouseUp}
         />
       ) : (
