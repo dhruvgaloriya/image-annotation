@@ -20,6 +20,8 @@ interface ToolbarProps {
   exportAnnotations: () => void;
   exportAsImage: () => void;
   image: string | null;
+  error: string | null;
+  clearError: () => void;
 }
 
 /**
@@ -41,12 +43,19 @@ const Toolbar: React.FC<ToolbarProps> = ({
   exportAnnotations,
   exportAsImage,
   image,
+  error,
+  clearError,
 }) => {
   return (
     <div className="toolbar">
       <div className="upload-area">
         <FileInput handleImageUpload={handleImageUpload} />
-        <DragDropArea onDragOver={handleDragOver} onDrop={handleDrop} />
+        <DragDropArea
+          onDragOver={handleDragOver}
+          onDrop={handleDrop}
+          error={error}
+          clearError={clearError}
+        />
       </div>
 
       <ModeSelector mode={mode} setMode={setMode} />

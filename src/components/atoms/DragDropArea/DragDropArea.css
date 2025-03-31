@@ -1,9 +1,16 @@
+.drag-drop-area-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .drag-drop-area {
   border: 2px dashed #ccc;
   padding: 10px 15px;
   text-align: center;
   color: #333;
-  transition: border-color 0.3s;
+  transition: all 0.3s;
+  cursor: pointer;
 }
 
 .drag-drop-area:hover {
@@ -12,4 +19,15 @@
 
 .drag-drop-area--dragging {
   border-color: #3498db;
+}
+
+.drag-drop-area--error {
+  border-color: #e74c3c;
+  background-color: #fdecea;
+}
+
+.drag-drop-error {
+  color: #e74c3c;
+  font-size: 12px;
+  text-align: center;
 }

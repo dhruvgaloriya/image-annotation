@@ -8,8 +8,15 @@ import useImage from "@/hooks/useImage";
  */
 function App() {
   // Image handling (upload, drag/drop, dimensions)
-  const { image, imageSize, handleImageUpload, handleDragOver, handleDrop } =
-    useImage();
+  const {
+    image,
+    imageSize,
+    handleImageUpload,
+    handleDragOver,
+    handleDrop,
+    error,
+    clearError,
+  } = useImage();
 
   // Annotation state and actions
   const {
@@ -69,6 +76,8 @@ function App() {
       handleCancelAnnotation={handleCancelAnnotation}
       exportAnnotations={exportAnnotations}
       exportAsImage={exportAsImage}
+      error={error}
+      clearError={clearError}
     />
   );
 }
