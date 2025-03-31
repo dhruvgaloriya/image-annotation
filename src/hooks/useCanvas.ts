@@ -184,17 +184,19 @@ const useCanvas = ({
     moveCoordinate(x, y);
   };
 
-  const handleTouchEnd = (e: React.TouchEvent<HTMLCanvasElement>) => {
-    if (!isDragging) return;
+  const endDragging = () => {
     setIsDragging(false);
     setDraggedPointIndex(null);
     setDraggedAnnotationIndex(null);
   };
 
+  const handleTouchEnd = () => {
+    if (!isDragging) return;
+    endDragging();
+  };
+
   const handleMouseUp = () => {
-    setIsDragging(false);
-    setDraggedPointIndex(null);
-    setDraggedAnnotationIndex(null);
+    endDragging();
   };
 
   const exportAnnotations = () => {
