@@ -1,10 +1,36 @@
+import CanvasArea from "@/components/organisms/CanvasArea/CanvasArea";
+import StatusBar from "@/components/organisms/StatusBar/StatusBar";
+import Toolbar from "@/components/organisms/Toolbar/Toolbar";
 import React from "react";
-import CanvasArea from "../../organisms/CanvasArea/CanvasArea";
-import StatusBar from "../../organisms/StatusBar/StatusBar";
-import Toolbar from "../../organisms/Toolbar/Toolbar";
 import "./MainLayout.css";
 
-const MainLayout = ({
+interface MainLayoutProps {
+  image: string | null;
+  canvasRef: React.RefObject<HTMLCanvasElement | null>;
+  handleCanvasClick: (e: React.MouseEvent<HTMLCanvasElement>) => void;
+  handleMouseDown: (e: React.MouseEvent<HTMLCanvasElement>) => void;
+  handleMouseMove: (e: React.MouseEvent<HTMLCanvasElement>) => void;
+  handleMouseUp: (e: React.MouseEvent<HTMLCanvasElement>) => void;
+  mode: "polygon" | "arrow";
+  handleImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
+  handleDrop: (e: React.DragEvent<HTMLDivElement>) => void;
+  setMode: (mode: "polygon" | "arrow") => void;
+  handleDelete: () => void;
+  selectedAnnotation: number | null;
+  annotations: any[];
+  handleClearAll: () => void;
+  currentAnnotation: any[];
+  handleCancelAnnotation: () => void;
+  exportAnnotations: () => void;
+  exportAsImage: () => void;
+}
+
+/**
+ * Main application layout component
+ * @param props - All props needed for the main layout including handlers and state
+ */
+const MainLayout: React.FC<MainLayoutProps> = ({
   image,
   canvasRef,
   handleCanvasClick,
@@ -16,10 +42,6 @@ const MainLayout = ({
   handleDragOver,
   handleDrop,
   setMode,
-  handleUndo,
-  handleRedo,
-  historyIndex,
-  history,
   handleDelete,
   selectedAnnotation,
   annotations,
@@ -41,10 +63,6 @@ const MainLayout = ({
         handleDrop={handleDrop}
         mode={mode}
         setMode={setMode}
-        handleUndo={handleUndo}
-        handleRedo={handleRedo}
-        historyIndex={historyIndex}
-        history={history}
         handleDelete={handleDelete}
         selectedAnnotation={selectedAnnotation}
         annotations={annotations}
@@ -81,11 +99,7 @@ const MainLayout = ({
         handleMouseUp={handleMouseUp}
       />
 
-      <StatusBar
-        historyIndex={historyIndex}
-        history={history}
-        annotations={annotations}
-      />
+      <StatusBar annotations={annotations} />
     </div>
   );
 };

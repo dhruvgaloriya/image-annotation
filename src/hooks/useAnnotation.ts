@@ -1,17 +1,45 @@
+import { distanceToLine, isPointInPolygon } from "@/utils/annotationUtils";
 import { useState } from "react";
-import { distanceToLine, isPointInPolygon } from "../utils/annotationUtils";
 
+export interface Point {
+  x: number;
+  y: number;
+}
+
+export interface Annotation {
+  type: "polygon" | "arrow";
+  points: Point[];
+}
+
+interface ClickResult {
+  clicked: boolean;
+  index: number;
+  pointIndex?: number;
+}
+
+/**
+ * Custom hook for managing annotation state and operations
+ * @returns Object containing annotation state and handlers
+ */
 const useAnnotation = () => {
-  const [annotations, setAnnotations] = useState([]);
-  const [currentAnnotation, setCurrentAnnotation] = useState([]);
-  const [selectedAnnotation, setSelectedAnnotation] = useState(null);
+  const [annotations, setAnnotations] = useState<Annotation[]>([]);
+  const [currentAnnotation, setCurrentAnnotation] = useState<Point[]>([]);
+  const [selectedAnnotation, setSelectedAnnotation] = useState<number | null>(
+    null
+  );
 
-  const checkClickOnAnnotation = (x, y) => {
-    console.log("x,y", x, y);
+  /**
+   * Checks if a click occurred on an existing annotation
+   * @param x - X coordinate of click
+   * @param y - Y coordinate of click
+   * @returns Object with click result details
+   */
+  const checkClickOnAnnotation = (x: number, y: number): ClickResult => {
     for (let i = 0; i < annotations.length; i++) {
       const annotation = annotations[i];
 
       if (annotation.type === "polygon") {
+        // Check if click was on a polygon point
         for (let j = 0; j < annotation.points.length; j++) {
           const point = annotation.points[j];
           if (Math.abs(x - point.x) < 10 && Math.abs(y - point.y) < 10) {
@@ -19,10 +47,12 @@ const useAnnotation = () => {
           }
         }
 
+        // Check if click was inside the polygon
         if (isPointInPolygon(x, y, annotation.points)) {
           return { clicked: true, index: i };
         }
       } else if (annotation.type === "arrow") {
+        // Check if click was on an arrow point
         for (let j = 0; j < annotation.points.length; j++) {
           const point = annotation.points[j];
           if (Math.abs(x - point.x) < 10 && Math.abs(y - point.y) < 10) {
@@ -30,6 +60,7 @@ const useAnnotation = () => {
           }
         }
 
+        // Check if click was near the arrow line
         const start = annotation.points[0];
         const end = annotation.points[1];
         const dist = distanceToLine(x, y, start.x, start.y, end.x, end.y);
@@ -39,7 +70,7 @@ const useAnnotation = () => {
       }
     }
 
-    return { clicked: false };
+    return { clicked: false, index: 0 };
   };
 
   const handleDelete = () => {

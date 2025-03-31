@@ -1,6 +1,31 @@
+import { Annotation, Point } from "@/hooks/useAnnotation";
+import { pageToImageCoords } from "@/utils/coordinateUtils";
 import { useEffect, useRef, useState } from "react";
-import { pageToImageCoords } from "../utils/coordinateUtils";
 
+interface UseCanvasProps {
+  image: string | null;
+  annotations: Annotation[];
+  setAnnotations: (annotations: Annotation[]) => void;
+  currentAnnotation: Point[];
+  setCurrentAnnotation: (points: Point[]) => void;
+  selectedAnnotation: number | null;
+  setSelectedAnnotation: (index: number | null) => void;
+  checkClickOnAnnotation: (
+    x: number,
+    y: number
+  ) => {
+    clicked: boolean;
+    index: number;
+    pointIndex?: number;
+  };
+  imageSize: { width: number; height: number };
+}
+
+/**
+ * Custom hook for canvas operations and drawing
+ * @param props - Canvas properties and handlers
+ * @returns Object containing canvas state and handlers
+ */
 const useCanvas = ({
   image,
   annotations,
@@ -11,19 +36,26 @@ const useCanvas = ({
   setSelectedAnnotation,
   checkClickOnAnnotation,
   imageSize,
-}) => {
-  const [mode, setMode] = useState("polygon");
+}: UseCanvasProps) => {
+  const [mode, setMode] = useState<"polygon" | "arrow">("polygon");
   const [isDragging, setIsDragging] = useState(false);
-  const [draggedPointIndex, setDraggedPointIndex] = useState(null);
-  const [draggedAnnotationIndex, setDraggedAnnotationIndex] = useState(null);
-  const canvasRef = useRef(null);
-  const imageRef = useRef(null);
+  const [draggedPointIndex, setDraggedPointIndex] = useState<number | null>(
+    null
+  );
+  const [draggedAnnotationIndex, setDraggedAnnotationIndex] = useState<
+    number | null
+  >(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const imageRef = useRef<HTMLImageElement | null>(null);
 
-  const handleCanvasClick = (e) => {
-    if (!image) return;
+  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!image || !canvasRef.current) return;
     const { x, y } = pageToImageCoords(e, canvasRef.current);
     const clickedOnAnnotation = checkClickOnAnnotation(x, y);
-    if (clickedOnAnnotation.clicked) {
+    if (
+      clickedOnAnnotation.clicked &&
+      clickedOnAnnotation.index !== undefined
+    ) {
       setSelectedAnnotation(clickedOnAnnotation.index);
       return;
     }
@@ -46,7 +78,7 @@ const useCanvas = ({
       if (currentAnnotation.length === 0) {
         setCurrentAnnotation([{ x, y }]);
       } else if (currentAnnotation.length === 1) {
-        const newArrow = {
+        const newArrow: Annotation = {
           type: "arrow",
           points: [currentAnnotation[0], { x, y }],
         };
@@ -56,7 +88,7 @@ const useCanvas = ({
     }
   };
 
-  const handleMouseDown = (e) => {
+  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!image) return;
     const { x, y } = pageToImageCoords(e, canvasRef.current);
 
@@ -74,7 +106,7 @@ const useCanvas = ({
     }
   };
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isDragging) return;
     const { x, y } = pageToImageCoords(e, canvasRef.current);
 
@@ -91,16 +123,16 @@ const useCanvas = ({
 
       if (annotation.type === "polygon") {
         const oldCenterX =
-          annotation.points.reduce((sum, p) => sum + p.x, 0) /
+          annotation.points.reduce((sum: number, p: Point) => sum + p.x, 0) /
           annotation.points.length;
         const oldCenterY =
-          annotation.points.reduce((sum, p) => sum + p.y, 0) /
+          annotation.points.reduce((sum: number, p: Point) => sum + p.y, 0) /
           annotation.points.length;
 
         const deltaX = x - oldCenterX;
         const deltaY = y - oldCenterY;
 
-        annotation.points = annotation.points.map((point) => ({
+        annotation.points = annotation.points.map((point: Point) => ({
           x: point.x + deltaX,
           y: point.y + deltaY,
         }));
@@ -111,7 +143,7 @@ const useCanvas = ({
         const deltaX = x - midX;
         const deltaY = y - midY;
 
-        annotation.points = annotation.points.map((point) => ({
+        annotation.points = annotation.points.map((point: Point) => ({
           x: point.x + deltaX,
           y: point.y + deltaY,
         }));
@@ -135,7 +167,7 @@ const useCanvas = ({
 
     const exportData = annotations.map((annotation) => ({
       type: annotation.type,
-      points: annotation.points.map((point) => ({
+      points: annotation.points.map((point: Point) => ({
         x: point.x / imageSize.width,
         y: point.y / imageSize.height,
       })),
@@ -162,6 +194,10 @@ const useCanvas = ({
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
 
+    if (ctx === null) {
+      throw new Error("Failed to get 2D context");
+    }
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     if (imageRef.current) {
@@ -172,11 +208,11 @@ const useCanvas = ({
       const isSelected = index === selectedAnnotation;
 
       if (annotation.type === "polygon") {
-        ctx.beginPath();
-        ctx.moveTo(annotation.points[0].x, annotation.points[0].y);
+        ctx?.beginPath();
+        ctx?.moveTo(annotation.points[0].x, annotation.points[0].y);
 
         for (let i = 1; i < annotation.points.length; i++) {
-          ctx.lineTo(annotation.points[i].x, annotation.points[i].y);
+          ctx?.lineTo(annotation.points[i].x, annotation.points[i].y);
         }
 
         ctx.closePath();
@@ -188,7 +224,7 @@ const useCanvas = ({
         ctx.lineWidth = 3;
         ctx.stroke();
 
-        annotation.points.forEach((point) => {
+        annotation.points.forEach((point: { x: number; y: number }) => {
           ctx.beginPath();
           ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
           ctx.fillStyle = isSelected ? "red" : "green";
@@ -290,7 +326,7 @@ const useCanvas = ({
         canvas.height = img.height;
         imageRef.current = img;
         const ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
       }
     };
     img.src = image;
