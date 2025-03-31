@@ -7,8 +7,6 @@ import useImage from "@/hooks/useImage";
  * Main application component
  */
 function App() {
-  // Image handling (upload, drag/drop, dimensions)
-
   // Annotation state and actions
   const {
     annotations,
@@ -23,6 +21,7 @@ function App() {
     handleCancelAnnotation,
   } = useAnnotation();
 
+  // Image handling (upload, drag/drop, dimensions)
   const {
     image,
     imageSize,
