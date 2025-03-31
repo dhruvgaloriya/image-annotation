@@ -33,6 +33,9 @@ function App() {
     handleCanvasClick,
     handleMouseDown,
     handleMouseMove,
+    handleTouchEnd,
+    handleTouchMove,
+    handleTouchStart,
     handleMouseUp,
     exportAnnotations,
     exportAsImage,
@@ -56,6 +59,9 @@ function App() {
       handleMouseDown={handleMouseDown}
       handleMouseMove={handleMouseMove}
       handleMouseUp={handleMouseUp}
+      handleTouchEnd={handleTouchEnd}
+      handleTouchMove={handleTouchMove}
+      handleTouchStart={handleTouchStart}
       mode={mode}
       handleImageUpload={handleImageUpload}
       handleDragOver={handleDragOver}

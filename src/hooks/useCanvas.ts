@@ -88,10 +88,18 @@ const useCanvas = ({
     }
   };
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!image) return;
-    const { x, y } = pageToImageCoords(e, canvasRef.current);
+  // Convert touch event to mouse-like event
+  const getTouchCoordinates = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (!canvasRef.current) return { x: 0, y: 0 };
+    const touch = e.touches[0];
+    const mouseEvent = {
+      clientX: touch.clientX,
+      clientY: touch.clientY,
+    } as React.MouseEvent<HTMLCanvasElement>;
+    return pageToImageCoords(mouseEvent, canvasRef.current);
+  };
 
+  const downCoordinate = (x: number, y: number) => {
     const clickResult = checkClickOnAnnotation(x, y);
     if (clickResult.clicked) {
       setIsDragging(true);
@@ -106,10 +114,20 @@ const useCanvas = ({
     }
   };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDragging) return;
+  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!image) return;
     const { x, y } = pageToImageCoords(e, canvasRef.current);
+    downCoordinate(x, y);
+  };
 
+  const handleTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
+    if (!image) return;
+    const { x, y } = getTouchCoordinates(e);
+    downCoordinate(x, y);
+  };
+
+  const moveCoordinate = (x: number, y: number) => {
     if (draggedPointIndex !== null && draggedAnnotationIndex !== null) {
       const newAnnotations = [...annotations];
       newAnnotations[draggedAnnotationIndex].points[draggedPointIndex] = {
@@ -153,10 +171,32 @@ const useCanvas = ({
     }
   };
 
-  const handleMouseUp = () => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDragging) return;
+    const { x, y } = pageToImageCoords(e, canvasRef.current);
+    moveCoordinate(x, y);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
+    if (!isDragging) return;
+    const { x, y } = getTouchCoordinates(e);
+    moveCoordinate(x, y);
+  };
+
+  const endDragging = () => {
     setIsDragging(false);
     setDraggedPointIndex(null);
     setDraggedAnnotationIndex(null);
+  };
+
+  const handleTouchEnd = () => {
+    if (!isDragging) return;
+    endDragging();
+  };
+
+  const handleMouseUp = () => {
+    endDragging();
   };
 
   const exportAnnotations = () => {
@@ -339,6 +379,9 @@ const useCanvas = ({
     handleCanvasClick,
     handleMouseDown,
     handleMouseMove,
+    handleTouchStart,
+    handleTouchMove,
+    handleTouchEnd,
     handleMouseUp,
     exportAnnotations,
     exportAsImage,
