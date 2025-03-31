@@ -11,6 +11,9 @@ interface MainLayoutProps {
   handleMouseDown: (e: React.MouseEvent<HTMLCanvasElement>) => void;
   handleMouseMove: (e: React.MouseEvent<HTMLCanvasElement>) => void;
   handleMouseUp: (e: React.MouseEvent<HTMLCanvasElement>) => void;
+  handleTouchStart: (e: React.TouchEvent<HTMLCanvasElement>) => void;
+  handleTouchMove: (e: React.TouchEvent<HTMLCanvasElement>) => void;
+  handleTouchEnd: (e: React.TouchEvent<HTMLCanvasElement>) => void;
   mode: "polygon" | "arrow";
   handleImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
@@ -50,6 +53,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   handleCancelAnnotation,
   exportAnnotations,
   exportAsImage,
+  handleTouchStart,
+  handleTouchMove,
+  handleTouchEnd,
 }) => {
   return (
     <div className="app">
@@ -97,6 +103,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({
         handleMouseDown={handleMouseDown}
         handleMouseMove={handleMouseMove}
         handleMouseUp={handleMouseUp}
+        handleTouchStart={handleTouchStart}
+        handleTouchMove={handleTouchMove}
+        handleTouchEnd={handleTouchEnd}
       />
 
       <StatusBar annotations={annotations} />
