@@ -261,7 +261,7 @@ const useCanvas = ({
           : "rgba(0, 255, 0, 0.2)";
         ctx.fill();
         ctx.strokeStyle = isSelected ? "red" : "green";
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 6;
         ctx.stroke();
 
         annotation.points.forEach((point: { x: number; y: number }) => {
@@ -278,7 +278,7 @@ const useCanvas = ({
         ctx.moveTo(start.x, start.y);
         ctx.lineTo(end.x, end.y);
         ctx.strokeStyle = isSelected ? "red" : "blue";
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 6;
         ctx.stroke();
 
         const angle = Math.atan2(end.y - start.y, end.x - start.x);
@@ -327,7 +327,7 @@ const useCanvas = ({
         }
 
         ctx.strokeStyle = "yellow";
-        ctx.lineWidth = 4;
+        ctx.lineWidth = 6;
         ctx.stroke();
 
         currentAnnotation.forEach((point) => {
@@ -344,7 +344,7 @@ const useCanvas = ({
         ctx.moveTo(start.x, start.y);
         ctx.lineTo(end.x, end.y);
         ctx.strokeStyle = "rgba(255, 255, 0, 0.5)";
-        ctx.lineWidth = 4;
+        ctx.lineWidth = 6;
         ctx.stroke();
 
         ctx.beginPath();
