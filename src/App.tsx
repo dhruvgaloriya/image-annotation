@@ -8,15 +8,6 @@ import useImage from "@/hooks/useImage";
  */
 function App() {
   // Image handling (upload, drag/drop, dimensions)
-  const {
-    image,
-    imageSize,
-    handleImageUpload,
-    handleDragOver,
-    handleDrop,
-    error,
-    clearError,
-  } = useImage();
 
   // Annotation state and actions
   const {
@@ -31,6 +22,20 @@ function App() {
     handleClearAll,
     handleCancelAnnotation,
   } = useAnnotation();
+
+  const {
+    image,
+    imageSize,
+    handleImageUpload,
+    handleDragOver,
+    handleDrop,
+    error,
+    clearError,
+  } = useImage({
+    onNewImageLoaded: () => {
+      handleClearAll();
+    },
+  });
 
   // Canvas drawing and interaction
   const {

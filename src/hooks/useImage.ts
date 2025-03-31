@@ -1,10 +1,13 @@
 import { useRef, useState } from "react";
 
+interface UseImageProps {
+  onNewImageLoaded?: () => void; // Add this
+}
 /**
  * Custom hook for managing image state and operations
  * @returns Object containing image state and handlers
  */
-const useImage = () => {
+const useImage = ({ onNewImageLoaded }: UseImageProps = {}) => {
   const [image, setImage] = useState<string | null>(null);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [error, setError] = useState<string | null>(null);
@@ -30,6 +33,7 @@ const useImage = () => {
         setImageSize({ width: img.width, height: img.height });
         setImage(e.target?.result as string);
         setError(null);
+        onNewImageLoaded?.();
       };
       img.src = e.target?.result as string;
     };
