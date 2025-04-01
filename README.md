@@ -15,13 +15,9 @@ A responsive web application that allows users to annotate images with polygons 
 
 [View Live Demo](https://protexai.netlify.app)
 
-## Screenshot
-
-![Screenshot of the Image Annotation Tool](screenshot.png)
-
 ## Video
 
-
+https://github.com/user-attachments/assets/1a95bbef-a85d-4d27-b314-ead4c3edb94a
 
 ## Installation
 
