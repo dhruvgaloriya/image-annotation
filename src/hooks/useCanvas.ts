@@ -22,8 +22,16 @@ interface UseCanvasProps {
 }
 
 /**
- * Custom hook for canvas operations and drawing
- * @param props - Canvas properties and handlers
+ * Custom hook for managing canvas operations and drawing
+ *
+ * This hook provides functionality for:
+ * - Handling mouse/touch interactions with the canvas
+ * - Drawing annotations on the canvas
+ * - Managing drawing modes (polygon/arrow)
+ * - Exporting annotations and images
+ * - Handling image display on the canvas
+ *
+ * @param {UseCanvasProps} props - Required properties including image and annotation states
  * @returns Object containing canvas state and handlers
  */
 const useCanvas = ({
@@ -50,7 +58,10 @@ const useCanvas = ({
 
   const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!image || !canvasRef.current) return;
+    // Convert screen coordinates to image coordinates
     const { x, y } = pageToImageCoords(e, canvasRef.current);
+
+    // Check if click was on existing annotation
     const clickedOnAnnotation = checkClickOnAnnotation(x, y);
     if (
       clickedOnAnnotation.clicked &&
@@ -60,7 +71,9 @@ const useCanvas = ({
       return;
     }
 
+    // Handle polygon mode clicks
     if (mode === "polygon") {
+      // If clicking near first point with enough points, complete the polygon
       if (
         currentAnnotation.length > 2 &&
         Math.abs(x - currentAnnotation[0].x) < 10 &&
@@ -72,12 +85,17 @@ const useCanvas = ({
         ]);
         setCurrentAnnotation([]);
       } else {
+        // Add new point to current polygon
         setCurrentAnnotation([...currentAnnotation, { x, y }]);
       }
-    } else if (mode === "arrow") {
+    }
+    // Handle arrow mode clicks
+    else if (mode === "arrow") {
       if (currentAnnotation.length === 0) {
+        // Set starting point for arrow
         setCurrentAnnotation([{ x, y }]);
       } else if (currentAnnotation.length === 1) {
+        // Complete the arrow with end point
         const newArrow: Annotation = {
           type: "arrow",
           points: [currentAnnotation[0], { x, y }],
@@ -212,8 +230,17 @@ const useCanvas = ({
         y: point.y / imageSize.height,
       })),
     }));
+    const dataStr = JSON.stringify(exportData, null, 2);
+    console.log("annotations", dataStr);
+    const dataUri =
+      "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
 
-    console.log(JSON.stringify(exportData, null, 2));
+    const exportLink = document.createElement("a");
+    exportLink.setAttribute("href", dataUri);
+    exportLink.setAttribute("download", "annotations.json");
+    document.body.appendChild(exportLink);
+    exportLink.click();
+    document.body.removeChild(exportLink);
   };
 
   const exportAsImage = () => {
@@ -229,6 +256,9 @@ const useCanvas = ({
     document.body.removeChild(exportLink);
   };
 
+  /**
+   * Effect for drawing on the canvas whenever relevant state changes
+   */
   useEffect(() => {
     if (!canvasRef.current || !image) return;
     const canvas = canvasRef.current;
@@ -238,16 +268,20 @@ const useCanvas = ({
       throw new Error("Failed to get 2D context");
     }
 
+    // Clear the canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // Draw the background image if loaded
     if (imageRef.current) {
       ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
     }
 
+    // Draw all completed annotations
     annotations.forEach((annotation, index) => {
       const isSelected = index === selectedAnnotation;
 
       if (annotation.type === "polygon") {
+        // Draw polygon
         ctx?.beginPath();
         ctx?.moveTo(annotation.points[0].x, annotation.points[0].y);
 
@@ -256,6 +290,8 @@ const useCanvas = ({
         }
 
         ctx.closePath();
+
+        // Fill and stroke polygon
         ctx.fillStyle = isSelected
           ? "rgba(255, 0, 0, 0.2)"
           : "rgba(0, 255, 0, 0.2)";
@@ -264,6 +300,7 @@ const useCanvas = ({
         ctx.lineWidth = 6;
         ctx.stroke();
 
+        // Draw polygon vertices
         annotation.points.forEach((point: { x: number; y: number }) => {
           ctx.beginPath();
           ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
@@ -271,6 +308,7 @@ const useCanvas = ({
           ctx.fill();
         });
       } else if (annotation.type === "arrow") {
+        // Draw arrow line
         const start = annotation.points[0];
         const end = annotation.points[1];
 
@@ -281,6 +319,7 @@ const useCanvas = ({
         ctx.lineWidth = 6;
         ctx.stroke();
 
+        // Draw arrow head
         const angle = Math.atan2(end.y - start.y, end.x - start.x);
         const headLength = 15;
 
@@ -310,8 +349,10 @@ const useCanvas = ({
       }
     });
 
+    // Draw the current annotation being created
     if (currentAnnotation.length > 0) {
       if (mode === "polygon") {
+        // Draw current polygon points
         ctx.beginPath();
         ctx.moveTo(currentAnnotation[0].x, currentAnnotation[0].y);
 
@@ -319,6 +360,7 @@ const useCanvas = ({
           ctx.lineTo(currentAnnotation[i].x, currentAnnotation[i].y);
         }
 
+        // Draw preview line to mouse position if dragging
         if (currentAnnotation.length > 0 && isDragging) {
           ctx.lineTo(
             currentAnnotation[currentAnnotation.length - 1].x,
@@ -330,6 +372,7 @@ const useCanvas = ({
         ctx.lineWidth = 6;
         ctx.stroke();
 
+        // Draw current polygon vertices
         currentAnnotation.forEach((point) => {
           ctx.beginPath();
           ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
@@ -340,6 +383,7 @@ const useCanvas = ({
         const start = currentAnnotation[0];
         const end = { x: start.x + 50, y: start.y + 50 };
 
+        // Draw preview arrow
         ctx.beginPath();
         ctx.moveTo(start.x, start.y);
         ctx.lineTo(end.x, end.y);
@@ -347,6 +391,7 @@ const useCanvas = ({
         ctx.lineWidth = 6;
         ctx.stroke();
 
+        // Draw starting point
         ctx.beginPath();
         ctx.arc(start.x, start.y, 5, 0, Math.PI * 2);
         ctx.fillStyle = "yellow";
@@ -355,6 +400,9 @@ const useCanvas = ({
     }
   }, [image, annotations, currentAnnotation, selectedAnnotation, isDragging]);
 
+  /**
+   * Effect for loading and displaying the image on the canvas
+   */
   useEffect(() => {
     if (!image || !canvasRef.current) return;
 

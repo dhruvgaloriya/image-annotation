@@ -19,20 +19,32 @@ interface ClickResult {
 
 /**
  * Custom hook for managing annotation state and operations
+ *
+ * This hook provides functionality for:
+ * - Creating and managing annotations (polygons and arrows)
+ * - Selecting and manipulating existing annotations
+ * - Checking for clicks on annotations
+ * - Performing annotation operations (delete, clear, cancel)
+ *
  * @returns Object containing annotation state and handlers
  */
 const useAnnotation = () => {
+  // Array of all completed annotations
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
+
+  // Points for the annotation currently being drawn
   const [currentAnnotation, setCurrentAnnotation] = useState<Point[]>([]);
+
+  // Index of the currently selected annotation
   const [selectedAnnotation, setSelectedAnnotation] = useState<number | null>(
     null
   );
 
   /**
    * Checks if a click occurred on an existing annotation
-   * @param x - X coordinate of click
-   * @param y - Y coordinate of click
-   * @returns Object with click result details
+   * @param {number} x - X coordinate of the click
+   * @param {number} y - Y coordinate of the click
+   * @returns {ClickResult} Object indicating if and what was clicked
    */
   const checkClickOnAnnotation = (x: number, y: number): ClickResult => {
     for (let i = 0; i < annotations.length; i++) {
@@ -73,6 +85,9 @@ const useAnnotation = () => {
     return { clicked: false, index: 0 };
   };
 
+  /**
+   * Deletes the currently selected annotation
+   */
   const handleDelete = () => {
     if (selectedAnnotation !== null) {
       const newAnnotations = annotations.filter(
@@ -83,12 +98,18 @@ const useAnnotation = () => {
     }
   };
 
+  /**
+   * Clears all annotations and resets drawing state
+   */
   const handleClearAll = () => {
     setAnnotations([]);
     setCurrentAnnotation([]);
     setSelectedAnnotation(null);
   };
 
+  /**
+   * Cancels the current annotation being drawn
+   */
   const handleCancelAnnotation = () => {
     setCurrentAnnotation([]);
   };
